@@ -287,7 +287,9 @@ if (my $func = main->can($cname)) {
 x_open($first);
 
 __END__
+
 Workspace Container Management Utility
+
 The ws container workspace management utility provides what most
 engineers, developers, and learners want from a workspace container
 manager with reasonable defaults: a single consistent bind-mount to home
@@ -296,9 +298,13 @@ importantly --- to be able to *quickly* switch between them and keep
 them up to date with the latest workspace image as new tools are added
 and old ones improved, even use the same workspace with different
 images.
+
 Command: pull
+
 Pulls the latest current image (see image) if set, otherwise pulls the named image from registry.
+
 Command: create
+
 Creates a directory for each workspace in the parent directory indicated
 by the WORKSPACES environment variable (default ~/Workspaces) and
 automatically bind-mounts it as the home directory for the workspace
@@ -310,58 +316,82 @@ directory (much like /etc/skel). Removing it later will cause the
 ephemeral workspace image entrypoint to do another sync with whatever
 the current local image is replacing everything that it contains with
 copies
+
 During creation the user will be prompted for the following (defaults
 taken from the current user):
+
   * Workspace Name - name of workspace and directory in $WORKSPACES
   * User Name      - user name for workspace container
   * User Shell     - user shell for workspace container
   * Group Name     - user group name for workspace container
   * Ports          - ports (ex: 80 -> -p 80:80)
   * Extra Mounts   - extra bind-mounts (ex: /tmp -> -v /tmp:/tmp)
+
 The directory within $WORKSPACES is always mounted the user home
 directory. (Hence, "extra mounts")
+
 The user and group ID will always match that of the current user. This
 is sufficient for most work situations. When different IDs are required,
 first create a user on the local host system that has the wanted IDs and
 change to that user before running ws. This prevents file owner and
 group ID problems later. Note that this is a constraint of working with
 containers in docker itself, not this utility.
+
 The hostname of the container is automatically set to the name of the
 workspace.
+
 Ports and mounts can be specified in shorthand as single values
 without the colon (as well as the normal colon syntax). Separate
 multiple values with spaces. No other validation of port input
 values is done allowing any syntax that is valid for the docker -v
 switch to be passed.
+
 Note that it is generally best to just use a single home directory and
 create symbolic and/or hardlinks within the container to stuff within
 that home directory. This centralizes the workspace directory for
 convenience and provides a quick visual representation of what is
 included in the work.
+
 The /var/run/docker.sock socket is always mounted. Unfortunately, the
 owner user id or group id must exactly match that of the workspace.
 A warning is printed if these do not coincide since usually the host
 docker instance is wanted and not another contained within the
 workspace, but not always.
+
 Command: config
+
 Prints the path to the configuration file for the given workspace.
+
 Command: edit
+
 Opens the configuration file (see config) for editing.
+
 Command: open
+
 Opens the named workspace (or creates if not found). This is the default
 if no known command is passed as the first argument in which case the
 first argument it assumed to be the name of the workspace to switch to.
+
 Command: rm, remove
+
 Remove the specified workspace with an interactive confirmation
 prompt. Will delete the directory and named container.
+
 Command: ls, list
+
 List all workspaces (lexigraphically from WORKSPACES directory).
+
 Command: image
+
 Sets the default image to be used. By default it is rwxrob/workspace but
 it can be set to any image name that has been pulled into the current
 Docker installation.
+
 Bash Tab Completion
+
 This script supports its own completion. Simply add the following to
 your .bashrc (or other) startup configuration file:
+
   complete -C ws ws
+
 Note that this assumes the ws command is included in the PATH.
